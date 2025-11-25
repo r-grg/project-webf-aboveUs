@@ -1,6 +1,6 @@
 // src/screens/FeedScreen.tsx
 import { useState } from "react"
-import { View, FlatList, StyleSheet } from "react-native"
+import { View, FlatList, StyleSheet, Image } from "react-native"
 import { Appbar, Text, ActivityIndicator } from "react-native-paper"
 import { useSightings } from "../context/SightingsContext"
 import { SightingCard } from "../components/SightingCard"
@@ -32,8 +32,17 @@ export const FeedScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <Appbar.Header>
-        <Appbar.Content title="AboveUs" />
+        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
+          <Image
+            source={require("../../assets/logo.png")}
+            style={{ width: 35, height: 35, marginRight: 8  }}
+          />
+          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+            AboveUs
+          </Text>
+        </View>
       </Appbar.Header>
+
 
       <SearchBar
         value={searchQuery}

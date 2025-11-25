@@ -25,7 +25,7 @@ export const SearchBar = ({
     <View style={styles.container}>
       <TextInput
         mode="outlined"
-        placeholder="zoek"
+        placeholder="zoek op getuige of beschrijving"
         value={value}
         onChangeText={onChangeText}
         left={<TextInput.Icon icon="magnify" />}

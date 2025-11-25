@@ -44,9 +44,12 @@ export const DetailScreen = ({ route, navigation }: any) => {
     <View style={styles.container}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Terug" />
+        <View style={{ flexDirection: "row", alignItems: "center"}}>
+          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+            Terug
+          </Text>
+        </View>
       </Appbar.Header>
-
       <ScrollView style={styles.content}>
         <Card style={styles.card}>
           <Card.Cover
@@ -99,7 +102,7 @@ export const DetailScreen = ({ route, navigation }: any) => {
             Toon op Kaart
           </Button>
           <Button
-            mode="contained"
+            mode="contained-tonal"
             onPress={handleContactWitness}
             style={styles.button}
             icon="email"
@@ -108,7 +111,7 @@ export const DetailScreen = ({ route, navigation }: any) => {
             Contact getuige
           </Button>
           <Button
-            mode="contained"
+            mode="contained-tonal"
             onPress={handleToggleFavorite}
             style={styles.button}
             icon={isFavorite ? "star" : "star-outline"}

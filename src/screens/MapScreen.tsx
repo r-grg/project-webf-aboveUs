@@ -11,7 +11,7 @@ export const MapScreen = ({ route }: any) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const mapRef = useRef<MapView | null>(null)
 
-  // 👇 Sighting passed from DetailScreen
+  // Sighting passed from DetailScreen
   const sighting = route?.params?.sighting
 
   // Safely extract latitude/longitude from sighting.location
@@ -48,7 +48,6 @@ export const MapScreen = ({ route }: any) => {
     requestLocation()
   }, [])
 
-  // 👇 Optionally zoom to sighting when screen opens
   useEffect(() => {
     if (sightingLat && sightingLng && mapRef.current) {
       mapRef.current.animateToRegion(
@@ -66,32 +65,35 @@ export const MapScreen = ({ route }: any) => {
   return (
     <View style={styles.container}>
       <Appbar.Header>
-        <Appbar.Content title="Kaart" />
+        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
+          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+            Kaart
+          </Text>
+        </View>
       </Appbar.Header>
-
       <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: sightingLat || 52.3676,   // fallback: Amsterdam
-          longitude: sightingLng || 4.9041,
+          latitude: sightingLat || 51.2194,   // fallback: Antwerp
+          longitude: sightingLng || 4.4025,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
       >
-        {/* 👇 Sighting Marker */}
+        {/* Sighting Marker */}
         {sightingLat && sightingLng && (
           <Marker
             coordinate={{
               latitude: sightingLat,
               longitude: sightingLng,
             }}
-            title={sighting.witnessName || "Onbekende getuige"}
-            description={sighting.description || ""}
+            // title={sighting.witnessName || "Onbekende getuige"}
+            // description={sighting.description || ""}
           />
         )}
 
-        {/* 👇 User Location Marker */}
+        {/* User Location Marker */}
         {location && (
           <Marker
             coordinate={{
