@@ -1,15 +1,16 @@
 import { View, StyleSheet } from "react-native"
 import { Card, Text, IconButton } from "react-native-paper"
 import type { Ufo } from "../types/Ufo"
+import { FavoriteToggle } from "./FavoriteToggle"
 
 interface SightingCardProps {
   sighting: Ufo
   isFavorite?: boolean
   onPress?: () => void
-  onFavoriteToggle?: () => void
+  onFavoriteToggle: () => void
 }
 
-export const SightingCard = ({ sighting, isFavorite, onPress, onFavoriteToggle }: SightingCardProps) => {
+export const SightingCard = ({ sighting, isFavorite = false, onPress, onFavoriteToggle }: SightingCardProps) => {
   return (
     <Card style={styles.card} onPress={onPress}>
       <Card.Cover
@@ -29,17 +30,16 @@ export const SightingCard = ({ sighting, isFavorite, onPress, onFavoriteToggle }
             {sighting.description || "Geen beschrijving"}
           </Text>
         </View>
-        <IconButton
-          icon={isFavorite ? "star" : "star-outline"}
+
+        <FavoriteToggle
+          isFavorite={isFavorite}
+          onToggle={onFavoriteToggle}
           size={24}
-          onPress={onFavoriteToggle}
-          iconColor={isFavorite ? "#FCD34D" : "#9CA3AF"}
         />
       </Card.Content>
     </Card>
   )
 }
-
 const styles = StyleSheet.create({
   card: {
     marginHorizontal: 16,
