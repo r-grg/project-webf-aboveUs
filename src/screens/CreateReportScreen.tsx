@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { View, ScrollView, StyleSheet, Image } from "react-native"
 import { Appbar, TextInput, Button, Text, Snackbar, HelperText, } from "react-native-paper"
 import * as ImagePicker from "expo-image-picker"
-import * as Location from "expo-location"
+//import * as Location from "expo-location"
 import MapView, { Marker, MapPressEvent, Region } from "react-native-maps"
 import { useSightings } from "../context/SightingsContext"
 import { Ufo } from "../types/Ufo"
@@ -27,7 +27,7 @@ export const CreateReportScreen = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("")
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [submitting, setSubmitting] = useState(false)
-
+  const mapRef = useRef<MapView | null>(null)
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"], 
@@ -42,49 +42,15 @@ export const CreateReportScreen = () => {
     }
   }
 
-  const getCurrentLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== "granted") {
-        setSnackbarMessage("Toestemming voor locatie geweigerd")
-        setSnackbarVisible(true)
-        return
-      }
-
-      const currentLocation = await Location.getCurrentPositionAsync({})
-      const coords = {
-        latitude: currentLocation.coords.latitude,
-        longitude: currentLocation.coords.longitude,
-      }
-
-      setLocation(coords)
-      setMapRegion((prev) => ({
-        ...prev,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-      }))
-
-      setSnackbarMessage("Huidige locatie ingesteld")
-      setSnackbarVisible(true)
-    } catch (error) {
-      setSnackbarMessage("Kon locatie niet ophalen")
-      setSnackbarVisible(true)
-    }
-  }
-
   const handleMapPress = (event: MapPressEvent) => {
-    const { latitude, longitude } = event.nativeEvent.coordinate
+  const { latitude, longitude } = event.nativeEvent.coordinate
 
-    setLocation({ latitude, longitude })
-    setMapRegion((prev) => ({
-      ...prev,
-      latitude,
-      longitude,
-    }))
+  setLocation({ latitude, longitude })
 
-    setSnackbarMessage("Locatie geselecteerd op kaart")
-    setSnackbarVisible(true)
-  }
+  setSnackbarMessage("Locatie geselecteerd op kaart")
+  setSnackbarVisible(true)
+}
+
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {}
@@ -153,17 +119,15 @@ export const CreateReportScreen = () => {
     <View style={styles.container}>
       <Appbar.Header>
         <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
-          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+          <Text variant="headlineLarge" style={{ color: "black" }}>
             Indienen
           </Text>
         </View>
       </Appbar.Header>
-
       <ScrollView style={styles.content}>
         <Text variant="titleLarge" style={styles.heading}>
           Nieuwe UFO-sighting
         </Text>
-
         <TextInput
           label="Naam getuige"
           value={witnessName}
@@ -175,7 +139,6 @@ export const CreateReportScreen = () => {
         <HelperText type="error" visible={!!errors.witnessName}>
           {errors.witnessName}
         </HelperText>
-
         <TextInput
           label="Beschrijving"
           value={description}
@@ -189,7 +152,6 @@ export const CreateReportScreen = () => {
         <HelperText type="error" visible={!!errors.description}>
           {errors.description}
         </HelperText>
-
         <TextInput
           label="E-mailadres"
           value={witnessContact}
@@ -203,11 +165,9 @@ export const CreateReportScreen = () => {
         <HelperText type="error" visible={!!errors.witnessContact}>
           {errors.witnessContact}
         </HelperText>
-
         <Button mode="outlined" onPress={pickImage} style={styles.button} icon="camera">
           {imageUri ? "Afbeelding wijzigen" : "Afbeelding toevoegen"}
         </Button>
-
         {imageUri ? (
           <View style={styles.imagePreviewContainer}>
             <Text style={styles.imageLabel}>Geselecteerde afbeelding:</Text>
@@ -218,30 +178,19 @@ export const CreateReportScreen = () => {
             />
           </View>
         ) : null}
-
-
-        <Button
-          mode="outlined"
-          onPress={getCurrentLocation}
-          style={styles.button}
-          icon="crosshairs-gps"
-        >
-          Huidige locatie gebruiken
-        </Button>
-
-        <Text style={{ marginTop: 16, marginBottom: 8, fontWeight: "600" }}>
-          Of selecteer een locatie op de kaart
+        <Text variant="bodyMedium" style={{marginTop: 16, marginBottom: 8, fontWeight: "600" }}>
+          Selecteer een locatie op de kaart
         </Text>
-
         <MapView
+          ref={mapRef}
           style={styles.map}
           region={mapRegion}
           onRegionChangeComplete={setMapRegion}
           onPress={handleMapPress}
+          rotateEnabled={false}
         >
           {location && <Marker coordinate={location} />}
         </MapView>
-
         <Button
           mode="contained"
           onPress={handleSubmit}
@@ -252,7 +201,6 @@ export const CreateReportScreen = () => {
           Verzenden
         </Button>
       </ScrollView>
-
       <Snackbar visible={snackbarVisible} onDismiss={() => setSnackbarVisible(false)} duration={3000}>
         {snackbarMessage}
       </Snackbar>
@@ -271,7 +219,6 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: 24,
-    fontWeight: "bold",
   },
   input: {
     marginBottom: 4,
@@ -292,18 +239,16 @@ const styles = StyleSheet.create({
   imagePreviewContainer: {
   marginTop: 8,
   marginBottom: 16,
-},
-
-imageLabel: {
-  marginBottom: 4,
-  color: "#4B5563",
-  fontSize: 12,
-},
-
-imagePreview: {
-  width: "100%",
-  height: 180,
-  borderRadius: 12,
-},
+  },
+  imageLabel: {
+    marginBottom: 4,
+    color: "#4B5563",
+    fontSize: 12,
+  },
+  imagePreview: {
+    width: "100%",
+    height: 180,
+    borderRadius: 12,
+  },
 
 })

@@ -23,12 +23,12 @@ export const FeedScreen = ({ navigation }: any) => {
     const dateB = new Date(b.dateTime).getTime()
 
     if (sortOption === "Recent") {
-      return dateB - dateA // nieuw → oud
+      return dateB - dateA // new to the old
     } else {
-      return dateA - dateB // oud → nieuw
+      return dateA - dateB // old to the new
     }
   })
-
+  
   return (
     <View style={styles.container}>
       <Appbar.Header>
@@ -37,20 +37,17 @@ export const FeedScreen = ({ navigation }: any) => {
             source={require("../../assets/logo.png")}
             style={{ width: 35, height: 35, marginRight: 8  }}
           />
-          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+          <Text variant="headlineLarge" style={{ color: "black" }}>
             AboveUs
           </Text>
         </View>
       </Appbar.Header>
-
-
       <SearchBar
         value={searchQuery}
         onChangeText={setSearchQuery}
         sortOption={sortOption}
         onChangeSortOption={setSortOption}
       />
-
       {loading ? (
         <View style={styles.centered}>
           <ActivityIndicator size="large" />

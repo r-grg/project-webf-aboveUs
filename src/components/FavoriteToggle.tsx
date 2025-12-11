@@ -9,7 +9,7 @@ interface FavoriteToggleProps {
 export const FavoriteToggle = ({ isFavorite, onToggle, size = 24 }: FavoriteToggleProps) => {
   return (
     <IconButton
-      icon={isFavorite ? "star" : "star-outline"}
+      icon={isFavorite ? "alien-outline" : "alien"}
       size={size}
       onPress={onToggle}
       iconColor={isFavorite ? "#FCD34D" : "#9CA3AF"}

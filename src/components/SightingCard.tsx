@@ -34,7 +34,7 @@ export const SightingCard = ({ sighting, isFavorite = false, onPress, onFavorite
         <FavoriteToggle
           isFavorite={isFavorite}
           onToggle={onFavoriteToggle}
-          size={24}
+          size={25}
         />
       </Card.Content>
     </Card>
@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontWeight: "bold",
     marginBottom: 4,
   },
   description: {
     color: "#6B7280",
   },
 })
+//src\components\SightingCard.tsx

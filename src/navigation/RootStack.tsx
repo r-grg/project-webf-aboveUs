@@ -16,3 +16,4 @@ export const RootStack = () => {
     </Stack.Navigator>
   )
 }
+//src\navigation\RootStack.tsx

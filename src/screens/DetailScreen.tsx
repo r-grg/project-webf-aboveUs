@@ -11,7 +11,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
   const { favorites, toggleFavorite } = useSightings()
   const [snackbarVisible, setSnackbarVisible] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
-
   const isFavorite = favorites.includes(sighting.id)
 
   const handleToggleFavorite = () => {
@@ -27,7 +26,7 @@ export const DetailScreen = ({ route, navigation }: any) => {
   }
 
   const handleShowOnMap = () => {
-    navigation.navigate("MapTab", { sighting })
+    navigation.navigate("Map", { sighting })
   }
 
   const formatDate = (date: Date) => {
@@ -45,7 +44,7 @@ export const DetailScreen = ({ route, navigation }: any) => {
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <View style={{ flexDirection: "row", alignItems: "center"}}>
-          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+          <Text style={{ fontSize: 35, fontFamily: "Orbitron_700Bold", color: "black" }}>
             Terug
           </Text>
         </View>
@@ -69,7 +68,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
             </Text>
           </Card.Content>
         </Card>
-
         <View style={styles.section}>
           <Text variant="titleMedium" style={styles.sectionTitle}>
             Locatie
@@ -78,7 +76,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
             Lat: {sighting.location?.latitude || "N/A"}, Lng: {sighting.location?.longitude || "N/A"}
           </Text>
         </View>
-
         <View style={styles.section}>
           <Text variant="titleMedium" style={styles.sectionTitle}>
             Beschrijving
@@ -87,7 +84,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
             {sighting.description || "Geen beschrijving beschikbaar"}
           </Text>
         </View>
-
         <View style={styles.section}>
           <Text variant="titleMedium" style={styles.sectionTitle}>
             Contact getuige
@@ -96,7 +92,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
             {sighting.witnessContact || "Niet beschikbaar"}
           </Text>
         </View>
-
         <View style={styles.buttonContainer}>
           <Button mode="contained" onPress={handleShowOnMap} style={styles.button} icon="map-marker">
             Toon op Kaart
@@ -120,7 +115,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
           </Button>
         </View>
       </ScrollView>
-
       <Snackbar visible={snackbarVisible} onDismiss={() => setSnackbarVisible(false)} duration={2000}>
         {snackbarMessage}
       </Snackbar>
@@ -146,7 +140,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   title: {
-    fontWeight: "bold",
     marginBottom: 8,
   },
   date: {
@@ -157,7 +150,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionTitle: {
-    fontWeight: "bold",
     marginBottom: 8,
   },
   sectionText: {

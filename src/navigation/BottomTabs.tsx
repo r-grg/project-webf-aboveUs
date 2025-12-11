@@ -15,10 +15,15 @@ export const BottomTabs = () => {
         headerShown: false,
         tabBarActiveTintColor: paperTheme.colors.primary,
         tabBarInactiveTintColor: paperTheme.colors.primaryContainer,
+        tabBarLabelStyle: {
+          fontFamily: "Exo2_400Regular", 
+          fontSize: 11,
+          letterSpacing: 0.5,
+        },
       }}
     >
       <Tab.Screen
-        name="FeedTab"
+        name="FeedScreen"
         component={RootStack}
         options={{
           tabBarLabel: "Feed",
@@ -28,7 +33,7 @@ export const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="MapTab"
+        name="Map"
         component={MapScreen}
         options={{
           tabBarLabel: "Kaart",
@@ -55,3 +60,5 @@ export const BottomTabs = () => {
     </Tab.Navigator>
   )
 }
+
+//src\navigation\BottomTabs.tsx

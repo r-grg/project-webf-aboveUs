@@ -7,19 +7,16 @@ import { useNavigation } from "@react-navigation/native"
 export const FavoriteScreen = () => {
   const { sightings, favorites, toggleFavorite } = useSightings()
   const navigation = useNavigation()
-
   const favoriteSightings = sightings.filter((sighting) => favorites.includes(sighting.id))
-
   return (
     <View style={styles.container}>
       <Appbar.Header>
         <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
-          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+          <Text style={{ fontSize: 35, fontFamily: "Orbitron_700Bold", color: "black" }}>
             Favorieten
           </Text>
         </View>
       </Appbar.Header>
-
       {favoriteSightings.length === 0 ? (
         <View style={styles.centered}>
           <Text variant="bodyLarge" style={styles.emptyText}>
@@ -35,7 +32,7 @@ export const FavoriteScreen = () => {
               sighting={item}
               isFavorite={true}
               onPress={() =>
-                (navigation as any).navigate("FeedTab", {
+                (navigation as any).navigate("FeedScreen", {
                   screen: "Detail",
                   params: { sighting: item },
                 })
@@ -73,3 +70,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 })
+//

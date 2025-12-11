@@ -4,40 +4,32 @@ export const paperTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-     // BRAND COLORS
-    primary: "#4B3D8F",          
+    primary: "#4B3D8F",
     onPrimary: "#FFFFFF",
-    primaryContainer: "#bcb3d8ff", 
+    primaryContainer: "#bcb3d8ff",
+  },
 
-    secondary: "#FF7A45",        
-    onSecondary: "#FFFFFF",
-    secondaryContainer: "#FFE2D5",
+  fonts: {
+    ...DefaultTheme.fonts,
 
-    tertiary: "#3A8CCB",         
-    onTertiary: "#FFFFFF",
-    tertiaryContainer: "#D3ECFF",
+    displayLarge:   { ...DefaultTheme.fonts.displayLarge,   fontFamily: "Orbitron_700Bold" },
+    displayMedium:  { ...DefaultTheme.fonts.displayMedium,  fontFamily: "Orbitron_700Bold" },
+    displaySmall:   { ...DefaultTheme.fonts.displaySmall,   fontFamily: "Orbitron_700Bold" },
 
-    // APP BACKGROUNDS
-    background: "#F8F7FC",       
-    onBackground: "#1A1A1A",
+    headlineLarge:  { ...DefaultTheme.fonts.headlineLarge,  fontFamily: "Orbitron_700Bold" },
+    headlineMedium: { ...DefaultTheme.fonts.headlineMedium, fontFamily: "Orbitron_700Bold" },
+    headlineSmall:  { ...DefaultTheme.fonts.headlineSmall,  fontFamily: "Orbitron_700Bold" },
 
-    surface: "#FFFFFF",          
-    onSurface: "#1A1A1A",
+    titleLarge:     { ...DefaultTheme.fonts.titleLarge,     fontFamily: "Orbitron_700Bold" },
+    titleMedium:    { ...DefaultTheme.fonts.titleMedium,    fontFamily: "Orbitron_700Bold" },
+    titleSmall:     { ...DefaultTheme.fonts.titleSmall,     fontFamily: "Orbitron_700Bold" },
 
-    surfaceVariant: "#E6E1F2",
-    onSurfaceVariant: "#47455A",
+    labelLarge:     { ...DefaultTheme.fonts.labelLarge,     fontFamily: "Exo2_400Regular" },
+    labelMedium:    { ...DefaultTheme.fonts.labelMedium,    fontFamily: "Exo2_400Regular" },
+    labelSmall:     { ...DefaultTheme.fonts.labelSmall,     fontFamily: "Exo2_400Regular" },
 
-    // ERROR
-    error: "#BA1A1A",
-    onError: "#FFFFFF",
-    errorContainer: "#FFDAD6",
-
-    // OUTLINES & BORDERS
-    outline: "#7A758A",
-    outlineVariant: "#C9C4D6",
-
-    // SHADOW & ELEVATION
-    // shadow: "#000000",
-    // scrim: "#000000",
+    bodyLarge:      { ...DefaultTheme.fonts.bodyLarge,      fontFamily: "Exo2_400Regular" },
+    bodyMedium:     { ...DefaultTheme.fonts.bodyMedium,     fontFamily: "Exo2_400Regular" },
+    bodySmall:      { ...DefaultTheme.fonts.bodySmall,      fontFamily: "Exo2_400Regular" },
   },
 }

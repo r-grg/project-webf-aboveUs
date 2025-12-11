@@ -1,10 +1,11 @@
+//src\screens\MapScreen.tsx
 "use client"
-
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef, useCallback } from "react"
 import { View, StyleSheet } from "react-native"
 import { Appbar, Text, Button } from "react-native-paper"
 import MapView, { Marker, Region } from "react-native-maps"
 import * as Location from "expo-location"
+import { useFocusEffect } from "@react-navigation/native"
 import type { Ufo } from "../types/Ufo"
 
 interface MapScreenProps {
@@ -17,11 +18,9 @@ export const MapScreen = ({ route }: MapScreenProps) => {
   const mapRef = useRef<MapView | null>(null)
 
   const sighting = route?.params?.sighting
-
   const sightingLatRaw = sighting?.location?.latitude
   const sightingLngRaw = sighting?.location?.longitude
 
-  // Make sure they are numbers
   const sightingLat =
     typeof sightingLatRaw === "number" ? sightingLatRaw : Number(sightingLatRaw)
   const sightingLng =
@@ -31,16 +30,24 @@ export const MapScreen = ({ route }: MapScreenProps) => {
     Number.isFinite(sightingLat) && Number.isFinite(sightingLng)
 
   const requestLocation = async () => {
+    setErrorMsg(null)
     try {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
         setErrorMsg("Toestemming voor locatie geweigerd")
         return
       }
-
-      const currentLocation = await Location.getCurrentPositionAsync({})
+      let currentLocation = await Location.getLastKnownPositionAsync()
+      if (!currentLocation) {
+        currentLocation = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Lowest,
+        })
+      }
+      if (!currentLocation) {
+        setErrorMsg("Geen locatie beschikbaar")
+        return
+      }
       setLocation(currentLocation)
-
       mapRef.current?.animateToRegion(
         {
           latitude: currentLocation.coords.latitude,
@@ -55,20 +62,21 @@ export const MapScreen = ({ route }: MapScreenProps) => {
     }
   }
 
-  // Focus on the sighting when we come in / params change
-  useEffect(() => {
-    if (hasSightingLocation && mapRef.current) {
-      mapRef.current.animateToRegion(
-        {
-          latitude: sightingLat,
-          longitude: sightingLng,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03,
-        },
-        1000,
-      )
-    }
-  }, [hasSightingLocation, sightingLat, sightingLng])
+  useFocusEffect(
+    useCallback(() => {
+      if (hasSightingLocation && mapRef.current) {
+        mapRef.current.animateToRegion(
+          {
+            latitude: sightingLat,
+            longitude: sightingLng,
+            latitudeDelta: 0.03,
+            longitudeDelta: 0.03,
+          },
+          1000,
+        )
+      }
+    }, [hasSightingLocation, sightingLat, sightingLng]),
+  )
 
   const initialRegion: Region = hasSightingLocation
     ? {
@@ -78,36 +86,28 @@ export const MapScreen = ({ route }: MapScreenProps) => {
         longitudeDelta: 0.05,
       }
     : {
-        latitude: 51.2194, // fallback: Antwerp
+        latitude: 51.2194,
         longitude: 4.4025,
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       }
-
   return (
     <View style={styles.container}>
       <Appbar.Header>
         <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
-          <Text style={{ fontSize: 35, fontWeight: "bold", color: "black" }}>
+          <Text variant="headlineLarge" style={{ color: "black" }}>
             Kaart
           </Text>
         </View>
       </Appbar.Header>
-
       <MapView ref={mapRef} style={styles.map} initialRegion={initialRegion}>
-        {/* Sighting Marker (always visible if coords exist) */}
         {hasSightingLocation && (
           <Marker
-            coordinate={{
-              latitude: sightingLat,
-              longitude: sightingLng,
-            }}
+            coordinate={{ latitude: sightingLat, longitude: sightingLng }}
             title={sighting?.witnessName || "Onbekende getuige"}
             description={sighting?.description || ""}
           />
         )}
-
-        {/* User Location Marker (after button press) */}
         {location && (
           <Marker
             coordinate={{
@@ -119,7 +119,6 @@ export const MapScreen = ({ route }: MapScreenProps) => {
           />
         )}
       </MapView>
-
       <Button
         mode="contained"
         onPress={requestLocation}
@@ -128,7 +127,6 @@ export const MapScreen = ({ route }: MapScreenProps) => {
       >
         Mijn locatie ophalen
       </Button>
-
       {errorMsg && <Text style={styles.errorText}>{errorMsg}</Text>}
     </View>
   )
