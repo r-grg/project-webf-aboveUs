@@ -12,7 +12,7 @@ export const FavoriteScreen = () => {
     <View style={styles.container}>
       <Appbar.Header>
         <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
-          <Text style={{ fontSize: 35, fontFamily: "Orbitron_700Bold", color: "black" }}>
+          <Text variant="headlineLarge" style={{ color: "black" }}>
             Favorieten
           </Text>
         </View>

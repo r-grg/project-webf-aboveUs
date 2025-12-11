@@ -21,13 +21,10 @@ export const MapScreen = ({ route }: MapScreenProps) => {
   const sightingLatRaw = sighting?.location?.latitude
   const sightingLngRaw = sighting?.location?.longitude
 
-  const sightingLat =
-    typeof sightingLatRaw === "number" ? sightingLatRaw : Number(sightingLatRaw)
-  const sightingLng =
-    typeof sightingLngRaw === "number" ? sightingLngRaw : Number(sightingLngRaw)
+  const sightingLat = typeof sightingLatRaw === "number" ? sightingLatRaw : Number(sightingLatRaw)
+  const sightingLng = typeof sightingLngRaw === "number" ? sightingLngRaw : Number(sightingLngRaw)
 
-  const hasSightingLocation =
-    Number.isFinite(sightingLat) && Number.isFinite(sightingLng)
+  const hasSightingLocation = Number.isFinite(sightingLat) && Number.isFinite(sightingLng)
 
   const requestLocation = async () => {
     setErrorMsg(null)

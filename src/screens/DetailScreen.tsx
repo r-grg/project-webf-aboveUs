@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { View, ScrollView, StyleSheet, Linking } from "react-native"
 import { Appbar, Card, Text, Button, Snackbar } from "react-native-paper"
@@ -15,8 +14,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
 
   const handleToggleFavorite = () => {
     toggleFavorite(sighting.id)
-    setSnackbarMessage(isFavorite ? "Verwijderd uit favorieten" : "Toegevoegd aan favorieten")
-    setSnackbarVisible(true)
   }
 
   const handleContactWitness = () => {
@@ -68,6 +65,14 @@ export const DetailScreen = ({ route, navigation }: any) => {
             </Text>
           </Card.Content>
         </Card>
+        <View style={styles.section}>
+          <Text variant="titleMedium" style={styles.sectionTitle}>
+            Status
+          </Text>
+          <Text variant="bodyMedium" style={styles.sectionText}>
+            {sighting.status || "N/A"}
+          </Text>
+        </View>
         <View style={styles.section}>
           <Text variant="titleMedium" style={styles.sectionTitle}>
             Locatie

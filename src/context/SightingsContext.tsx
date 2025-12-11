@@ -1,3 +1,4 @@
+// src/context/SightingsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { api } from "../services/api"
@@ -8,7 +9,8 @@ type SightingsContextValue = {
   favorites: number[]
   loading: boolean
   toggleFavorite: (id: number) => void
-  createLocalSighting: (sighting: Omit<Ufo, "id">) => Promise<void>
+  createRemoteSighting: (sighting: Omit<Ufo, "id">) => Promise<void>
+  refreshSightings: () => Promise<void>
 }
 
 const SightingsContext = createContext<SightingsContextValue | undefined>(undefined)
@@ -21,32 +23,38 @@ export const SightingsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [favorites, setFavorites] = useState<number[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Load remote + local on mount
-  useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true)
-        const [remote, localJson] = await Promise.all([
-          api.getSightings(),
-          AsyncStorage.getItem(LOCAL_SIGHTINGS_KEY),
-        ])
+  const loadSightings = async () => {
+    try {
+      setLoading(true)
+      const [remote, localJson] = await Promise.all([
+        api.getSightings(),
+        AsyncStorage.getItem(LOCAL_SIGHTINGS_KEY),
+      ])
 
-        setRemoteSightings(remote)
+      setRemoteSightings(remote)
 
-        if (localJson) {
-          const parsed: Ufo[] = JSON.parse(localJson)
-          setLocalSightings(parsed)
-        }
-      } catch (e) {
-        console.error("Error loading sightings:", e)
-      } finally {
-        setLoading(false)
+      if (localJson) {
+        const parsed: Ufo[] = JSON.parse(localJson)
+        setLocalSightings(parsed)
+      } else {
+        setLocalSightings([])
       }
+    } catch (e) {
+      console.error("Fout tijdens het ophalen van sightings:", e)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    load()
+  useEffect(() => {
+    loadSightings()
   }, [])
 
+  const refreshSightings = async () => {
+    await loadSightings()
+  }
+
+  // Combineer lokale + remote meldingen
   const sightings = [...localSightings, ...remoteSightings]
 
   const toggleFavorite = (id: number) => {
@@ -55,17 +63,20 @@ export const SightingsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     )
   }
 
-  const createLocalSighting = async (sighting: Omit<Ufo, "id">) => {
-    // generate a negative id for local-only items
-    const minId = localSightings.reduce((min, s) => Math.min(min, s.id), 0)
-    const newId = minId <= 0 ? minId - 1 : -1
+  // 🔥 Dit is de functie die je in CreateReportScreen gebruikt
+  const createRemoteSighting = async (sighting: Omit<Ufo, "id">) => {
+    // 1) POST naar API (voor de opdracht)
+    const created = await api.createSighting(sighting)
 
-    const fullSighting: Ufo = {
+    // 2) Zeker maken dat we een id & datum hebben
+    const full: Ufo = {
       ...sighting,
-      id: newId,
+      id: created.id ?? Date.now(),
+      dateTime: created.dateTime ?? new Date(),
     }
 
-    const updatedLocal = [fullSighting, ...localSightings]
+    // 3) Lokaal bewaren (zodat hij in je feed verschijnt)
+    const updatedLocal = [full, ...localSightings]
     setLocalSightings(updatedLocal)
     await AsyncStorage.setItem(LOCAL_SIGHTINGS_KEY, JSON.stringify(updatedLocal))
   }
@@ -77,7 +88,8 @@ export const SightingsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         favorites,
         loading,
         toggleFavorite,
-        createLocalSighting,
+        createRemoteSighting,
+        refreshSightings,
       }}
     >
       {children}
@@ -87,6 +99,6 @@ export const SightingsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
 export const useSightings = () => {
   const ctx = useContext(SightingsContext)
-  if (!ctx) throw new Error("useSightings must be used within SightingsProvider")
+  if (!ctx) throw new Error("useSightings kan alleen gebruikt worden binnen een SightingsProvider.")
   return ctx
 }

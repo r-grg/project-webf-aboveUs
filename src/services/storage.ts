@@ -8,7 +8,7 @@ export const storage = {
       const data = await AsyncStorage.getItem(FAVORITES_KEY)
       return data ? JSON.parse(data) : []
     } catch (error) {
-      console.error("Error loading favorites:", error)
+      console.error("Fout bij het laden van favorieten:", error)
       return []
     }
   },
@@ -17,7 +17,7 @@ export const storage = {
     try {
       await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
     } catch (error) {
-      console.error("Error saving favorites:", error)
+      console.error("Fout bij het opslaan van favorieten:", error)
     }
   },
 } 

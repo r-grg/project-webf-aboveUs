@@ -1,3 +1,4 @@
+//src\screens\CreateReportScreen.tsx
 "use client"
 
 import { useState, useRef } from "react"
@@ -14,10 +15,9 @@ export const CreateReportScreen = () => {
   const [description, setDescription] = useState("")
   const [witnessContact, setWitnessContact] = useState("")
   const [imageUri, setImageUri] = useState("")
-  const { createLocalSighting } = useSightings()
+  const { createRemoteSighting  } = useSightings()
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
   const [mapRegion, setMapRegion] = useState<Region>({
-    // default center (Brussels-ish)
     latitude: 50.8503,
     longitude: 4.3517,
     latitudeDelta: 2,
@@ -35,26 +35,18 @@ export const CreateReportScreen = () => {
       aspect: [4, 3],
       quality: 1,
     })
-
-
     if (!result.canceled) {
       setImageUri(result.assets[0].uri)
     }
   }
 
   const handleMapPress = (event: MapPressEvent) => {
-  const { latitude, longitude } = event.nativeEvent.coordinate
-
-  setLocation({ latitude, longitude })
-
-  setSnackbarMessage("Locatie geselecteerd op kaart")
-  setSnackbarVisible(true)
-}
-
+    const { latitude, longitude } = event.nativeEvent.coordinate
+    setLocation({ latitude, longitude })
+  }
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {}
-
     if (!witnessName.trim()) {
       newErrors.witnessName = "Naam is verplicht"
     }
@@ -66,7 +58,6 @@ export const CreateReportScreen = () => {
     } else if (!/\S+@\S+\.\S+/.test(witnessContact)) {
       newErrors.witnessContact = "Ongeldig e-mailadres"
     }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -75,31 +66,27 @@ export const CreateReportScreen = () => {
     if (!validateForm()) {
       return
     }
-
     if (!location) {
-      setSnackbarMessage("Selecteer een locatie (huidige locatie of op de kaart)")
+      setSnackbarMessage("Selecteer een locatie")
       setSnackbarVisible(true)
       return
     }
-
     setSubmitting(true)
     try {
       const newSighting: Omit<Ufo, "id"> = {
         witnessName,
         description,
         witnessContact,
-        picture: imageUri || "https://sampleapis.assimilate.be/assets/images/ufosighting.webp",
+        picture:
+          imageUri || "https://sampleapis.assimilate.be/assets/images/ufosighting.webp",
         location,
         status: "unconfirmed",
         dateTime: new Date(),
       }
-
-      await createLocalSighting(newSighting)
-
-      setSnackbarMessage("Melding lokaal opgeslagen!")
+      await createRemoteSighting(newSighting)
+      setSnackbarMessage("Melding verzonden!")
       setSnackbarVisible(true)
 
-      // Clear form
       setWitnessName("")
       setDescription("")
       setWitnessContact("")
@@ -107,14 +94,13 @@ export const CreateReportScreen = () => {
       setLocation(null)
       setErrors({})
     } catch (error) {
-      console.error("Error saving local sighting:", error)
-      setSnackbarMessage("Fout bij opslaan. Probeer het later opnieuw.")
+      console.error("Fout bij verzenden:", error)
+      setSnackbarMessage("Fout bij verzenden. Probeer het later opnieuw.")
       setSnackbarVisible(true)
     } finally {
       setSubmitting(false)
     }
   }
-
   return (
     <View style={styles.container}>
       <Appbar.Header>
