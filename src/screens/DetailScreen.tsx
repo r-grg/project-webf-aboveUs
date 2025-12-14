@@ -26,7 +26,7 @@ export const DetailScreen = ({ route, navigation }: any) => {
     navigation.navigate("Map", { sighting })
   }
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("nl-NL", {
       year: "numeric",
       month: "long",

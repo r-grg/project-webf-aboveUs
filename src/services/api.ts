@@ -1,63 +1,47 @@
-// src/services/api.ts
-import { Ufo } from "../types/Ufo";
+import { Ufo } from "../types/Ufo"
 
-const API_UFO = "https://sampleapis.assimilate.be/ufo/sightings";
+const API_UFO = "https://sampleapis.assimilate.be/ufo/sightings"
+const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhYmluLmd1cnVuZ0BzdHVkZW50LmFwLmJlIiwiaWF0IjoxNzY1NzA1MTYxfQ.FCjepmro-Cqq5ywluXt8DfegK2HvrpmvEBNkgiHiRGI"
 
 export const api = {
   async getSightings(): Promise<Ufo[]> {
-    try {
-      const response = await fetch(API_UFO);
-      if (!response.ok) {
-        throw new Error("Kon sightings niet ophalen.");
-      }
-      const data = await response.json();
-      return data.map((item: any) => ({
-        ...item,
-        dateTime: new Date(item.dateTime || Date.now()),
-      }));
-    } catch (error) {
-      console.error("Fout tijdens het ophalen van sightings:", error);
-      throw error;
-    }
+    const response = await fetch(API_UFO)
+    if (!response.ok) throw new Error("Kon sightings niet ophalen.")
+    const data = await response.json()
+
+    // dateTime blijft string (ISO)
+    return data.map((item: any) => ({
+      ...item,
+      dateTime: typeof item.dateTime === "string" ? item.dateTime : new Date().toISOString(),
+    }))
   },
 
   async createSighting(newSighting: Omit<Ufo, "id">): Promise<Ufo> {
-    try {
-      const response = await fetch(API_UFO, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newSighting),
-      });
+    const response = await fetch(API_UFO, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
+      body: JSON.stringify(newSighting),
+    })
 
-      console.log("POST /ufo/sightings status:", response.status);
+    const text = await response.text().catch(() => "")
+    console.log("POST status:", response.status)
+    console.log("POST response body:", text)
 
-      // Als de demo-API POST niet accepteert (bijv. 404/405/500)
-      if (!response.ok) {
-        console.warn(
-          "API accepteert POST niet (read-only?). Gebruik lokale fallback."
-        );
-        return {
-          ...newSighting,
-          id: Date.now(),
-          dateTime: new Date(),
-        } as Ufo;
-      }
-
-      const created = await response.json();
-
-      return {
-        ...created,
-        dateTime: new Date(created.dateTime || Date.now()),
-      };
-    } catch (error) {
-      console.error("Fout tijdens POST request:", error);
+    if (!response.ok) {
       return {
         ...newSighting,
         id: Date.now(),
-        dateTime: new Date(),
-      } as Ufo;
+        dateTime: new Date().toISOString(),
+      }
     }
+
+    const created = text ? JSON.parse(text) : {}
+    return {
+      ...created,
+      dateTime: typeof created.dateTime === "string" ? created.dateTime : new Date().toISOString(),
+    } as Ufo
   },
-};
+}

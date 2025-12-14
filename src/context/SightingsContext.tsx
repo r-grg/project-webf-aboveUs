@@ -1,4 +1,3 @@
-// src/context/SightingsContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { api } from "../services/api"
@@ -54,7 +53,6 @@ export const SightingsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     await loadSightings()
   }
 
-  // Combineer lokale + remote meldingen
   const sightings = [...localSightings, ...remoteSightings]
 
   const toggleFavorite = (id: number) => {
@@ -63,19 +61,13 @@ export const SightingsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     )
   }
 
-  // 🔥 Dit is de functie die je in CreateReportScreen gebruikt
   const createRemoteSighting = async (sighting: Omit<Ufo, "id">) => {
-    // 1) POST naar API (voor de opdracht)
     const created = await api.createSighting(sighting)
-
-    // 2) Zeker maken dat we een id & datum hebben
     const full: Ufo = {
       ...sighting,
       id: created.id ?? Date.now(),
       dateTime: created.dateTime ?? new Date(),
     }
-
-    // 3) Lokaal bewaren (zodat hij in je feed verschijnt)
     const updatedLocal = [full, ...localSightings]
     setLocalSightings(updatedLocal)
     await AsyncStorage.setItem(LOCAL_SIGHTINGS_KEY, JSON.stringify(updatedLocal))

@@ -34,9 +34,9 @@ src/
 ├── components/   // Herbruikbare UI-componenten
 ├── screens/      // App-schermen (Feed, Detail, Map, Create, Favorites)
 ├── navigation/   // React Navigation (tabs + stack)
-├── context/      // SightingsContext (gedeelde state)
+├── context/      // SightingsContext
 ├── services/     // API- en AsyncStorage-logica
-├── theme/        // React Native Paper theming
+├── theme/        // Theme
 ├── types/        // TypeScript types
 ```
 
@@ -53,11 +53,12 @@ De applicatie maakt gebruik van de volgende API: https://sampleapis.assimilate.b
 
 ### POST
 - Bij het indienen van een nieuwe melding wordt een **POST-request** verstuurd naar dezelfde API
-- Deze API is read-only en accepteert geen persistente POST-acties
-- Om dit op te vangen wordt een **fallback-mechanisme** gebruikt:
-  - De POST wordt technisch uitgevoerd
-  - De nieuwe melding wordt lokaal opgeslagen met **AsyncStorage**
-  - De melding verschijnt alsnog in de applicatie
+- Authenticatie gebeurt via een Bearer Token
+- Bij een succesvolle POST (201 Created) wordt de nieuwe melding direct toegevoegd aan de applicatie
+- Indien de API tijdelijk faalt (bv. netwerk- of serverfout):
+  - wordt automatisch een **fallback-mechanisme** gebruikt
+  - de melding wordt lokaal opgeslagen met **AsyncStorage**
+  - de applicatie blijft volledig functioneel
 
 
 ## 💾 Lokale opslag (AsyncStorage)

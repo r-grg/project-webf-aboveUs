@@ -60,5 +60,3 @@ export const BottomTabs = () => {
     </Tab.Navigator>
   )
 }
-
-//src\navigation\BottomTabs.tsx

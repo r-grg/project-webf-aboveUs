@@ -61,4 +61,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
 })
-//src\components\SearchBar.tsx

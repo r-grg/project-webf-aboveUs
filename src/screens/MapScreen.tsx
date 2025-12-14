@@ -1,4 +1,3 @@
-//src\screens\MapScreen.tsx
 "use client"
 import { useState, useRef, useCallback } from "react"
 import { View, StyleSheet } from "react-native"

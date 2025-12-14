@@ -14,9 +14,8 @@ export default function App() {
     Exo2_400Regular,
   })
 
-  // Wait until fonts are loaded
   if (!fontsLoaded) {
-    return null // you can show a splash/loading here if you want
+    return null
   }
 
   return (

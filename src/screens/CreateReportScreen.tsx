@@ -1,14 +1,13 @@
-//src\screens\CreateReportScreen.tsx
 "use client"
 
 import { useState, useRef } from "react"
 import { View, ScrollView, StyleSheet, Image } from "react-native"
 import { Appbar, TextInput, Button, Text, Snackbar, HelperText, } from "react-native-paper"
 import * as ImagePicker from "expo-image-picker"
-//import * as Location from "expo-location"
 import MapView, { Marker, MapPressEvent, Region } from "react-native-maps"
 import { useSightings } from "../context/SightingsContext"
 import { Ufo } from "../types/Ufo"
+
 
 export const CreateReportScreen = () => {
   const [witnessName, setWitnessName] = useState("")
@@ -28,6 +27,8 @@ export const CreateReportScreen = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [submitting, setSubmitting] = useState(false)
   const mapRef = useRef<MapView | null>(null)
+
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"], 
@@ -81,7 +82,7 @@ export const CreateReportScreen = () => {
           imageUri || "https://sampleapis.assimilate.be/assets/images/ufosighting.webp",
         location,
         status: "unconfirmed",
-        dateTime: new Date(),
+        dateTime: new Date().toISOString(),
       }
       await createRemoteSighting(newSighting)
       setSnackbarMessage("Melding verzonden!")
@@ -138,6 +139,7 @@ export const CreateReportScreen = () => {
         <HelperText type="error" visible={!!errors.description}>
           {errors.description}
         </HelperText>
+
         <TextInput
           label="E-mailadres"
           value={witnessContact}
@@ -151,6 +153,7 @@ export const CreateReportScreen = () => {
         <HelperText type="error" visible={!!errors.witnessContact}>
           {errors.witnessContact}
         </HelperText>
+
         <Button mode="outlined" onPress={pickImage} style={styles.button} icon="camera">
           {imageUri ? "Afbeelding wijzigen" : "Afbeelding toevoegen"}
         </Button>
@@ -164,7 +167,7 @@ export const CreateReportScreen = () => {
             />
           </View>
         ) : null}
-        <Text variant="bodyMedium" style={{marginTop: 16, marginBottom: 8, fontWeight: "600" }}>
+        <Text variant="bodyMedium" style={{marginTop: 16, marginBottom: 8, }}>
           Selecteer een locatie op de kaart
         </Text>
         <MapView

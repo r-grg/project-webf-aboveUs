@@ -5,9 +5,8 @@ export interface Ufo {
   description: string
   picture: string
   status: string
-  dateTime: Date
+  dateTime: string
   witnessContact: string
 }
-
 
 export type SortOption = "Recent" | "Oudste"
