@@ -1,15 +1,12 @@
 "use client"
-import { useState } from "react"
 import { View, ScrollView, StyleSheet, Linking } from "react-native"
-import { Appbar, Card, Text, Button, Snackbar } from "react-native-paper"
+import { Appbar, Card, Text, Button } from "react-native-paper"
 import { useSightings } from "../context/SightingsContext"
 import { Ufo } from "../types/Ufo"
 
 export const DetailScreen = ({ route, navigation }: any) => {
   const { sighting } = route.params as { sighting: Ufo }
   const { favorites, toggleFavorite } = useSightings()
-  const [snackbarVisible, setSnackbarVisible] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState("")
   const isFavorite = favorites.includes(sighting.id)
 
   const handleToggleFavorite = () => {
@@ -27,7 +24,7 @@ export const DetailScreen = ({ route, navigation }: any) => {
   }
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("nl-NL", {
+    return new Date(date).toLocaleDateString("nl-BE", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -120,9 +117,6 @@ export const DetailScreen = ({ route, navigation }: any) => {
           </Button>
         </View>
       </ScrollView>
-      <Snackbar visible={snackbarVisible} onDismiss={() => setSnackbarVisible(false)} duration={2000}>
-        {snackbarMessage}
-      </Snackbar>
     </View>
   )
 }

@@ -52,26 +52,20 @@ De applicatie maakt gebruik van de volgende API: https://sampleapis.assimilate.b
 - De data wordt getoond in de feed en op de kaart
 
 ### POST
-- Bij het indienen van een nieuwe melding wordt een **POST-request** verstuurd naar dezelfde API
+- Bij het indienen van een nieuwe melding
 - Authenticatie gebeurt via een Bearer Token
 - Bij een succesvolle POST (201 Created) wordt de nieuwe melding direct toegevoegd aan de applicatie
-- Indien de API tijdelijk faalt (bv. netwerk- of serverfout):
-  - wordt automatisch een **fallback-mechanisme** gebruikt
-  - de melding wordt lokaal opgeslagen met **AsyncStorage**
-  - de applicatie blijft volledig functioneel
-
 
 ## 💾 Lokale opslag (AsyncStorage)
 
 AsyncStorage wordt gebruikt voor:
 - Opslaan van favorieten
-- Lokaal opslaan van nieuw toegevoegde UFO-meldingen (fallback na POST)
+- Lokaal opslaan van nieuw toegevoegde UFO-meldingen
 
 
 ## 🎨 UI & UX
 
 - UI-bibliotheek: **React Native Paper (Material Design 3)**
-- Consistente theming via `paperTheme`
 - Typografie:
   - **Orbitron** → titels & headings
   - **Exo 2** → bodytekst

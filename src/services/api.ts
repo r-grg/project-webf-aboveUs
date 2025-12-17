@@ -9,7 +9,6 @@ export const api = {
     if (!response.ok) throw new Error("Kon sightings niet ophalen.")
     const data = await response.json()
 
-    // dateTime blijft string (ISO)
     return data.map((item: any) => ({
       ...item,
       dateTime: typeof item.dateTime === "string" ? item.dateTime : new Date().toISOString(),
@@ -27,8 +26,6 @@ export const api = {
     })
 
     const text = await response.text().catch(() => "")
-    console.log("POST status:", response.status)
-    console.log("POST response body:", text)
 
     if (!response.ok) {
       return {
